@@ -130,8 +130,11 @@ def convert_mp4_to_mp3(input_file_path, output_dir):
     output_mp3_name = f"{base_name}.mp3"
     output_mp3_path = os.path.join(output_dir, output_mp3_name)
 
+    # Chemin explicite vers ffmpeg.exe dans le dossier bin
+    ffmpeg_path = os.path.join(os.getcwd(), "bin", "ffmpeg.exe")
+
     command = [
-        "ffmpeg",  # Suppose que ffmpeg est dans le PATH système
+        ffmpeg_path,  # Utilise le chemin local
         "-i", input_file_path,
         "-vn",
         "-acodec", "libmp3lame",
@@ -143,7 +146,7 @@ def convert_mp4_to_mp3(input_file_path, output_dir):
         subprocess.run(command, check=True, capture_output=True, text=True)
         return output_mp3_path
     except FileNotFoundError:
-        st.error("Erreur : FFmpeg n'a pas été trouvé. Veuillez vous assurer qu'il est installé et dans votre PATH.")
+        st.error("Erreur : FFmpeg n'a pas été trouvé. Veuillez vous assurer qu'il est installé dans le dossier bin de votre projet.")
         return None
     except subprocess.CalledProcessError as e:
         st.error(f"Erreur lors de la conversion : {e.stderr}")

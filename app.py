@@ -5,19 +5,19 @@ import tempfile
 import time
 import base64
 
-# --- Configuration (inspirée de app.py) ---
+# --- Configuration ---
 # Limite de taille de fichier à 500 Mo
 MAX_FILE_SIZE_MB = 500
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
-# --- Configuration de la page et style (inspiré de base.html et style.css) ---
+# --- Configuration de la page et style ---
 st.set_page_config(
     page_title="Convertisseur MP4 en MP3",
-    page_icon="🎵",
+    page_icon="logo.ico",
     layout="centered"
 )
 
-# Injection de CSS pour reproduire le style de votre application
+# Injection de CSS 
 st.markdown("""
     <style>
     .st-emotion-cache-18ni7ap {
@@ -86,7 +86,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- Fonctions (reproduisant la logique du projet Flask) ---
+# --- Fonctions  ---
 def convert_mp4_to_mp3(input_file_path, output_dir):
     """
     Convertit un fichier vidéo MP4 en un fichier audio MP3 en utilisant FFmpeg.
@@ -125,7 +125,7 @@ def get_binary_file_downloader_html(file_path, file_name):
         </a>
     """
 
-# --- Interface de l'application principale (reproduisant index.html) ---
+# --- Interface de l'application principale ---
 st.markdown('<div class="glass-box">', unsafe_allow_html=True)
 
 st.markdown(

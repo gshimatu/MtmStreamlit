@@ -5,6 +5,7 @@ import tempfile
 import time
 import base64
 import platform
+import shutil
 
 # --- Configuration ---
 # Limite de taille de fichier à 500 Mo
@@ -131,20 +132,28 @@ def convert_mp4_to_mp3(input_file_path, output_dir):
     output_mp3_name = f"{base_name}.mp3"
     output_mp3_path = os.path.join(output_dir, output_mp3_name)
 
-    # Choix du binaire selon l'OS
-    if platform.system() == 'Windows':
-        ffmpeg_filename = "ffmpeg.exe"
-    else:
-        ffmpeg_filename = "ffmpeg"
-    ffmpeg_path = os.path.join(os.getcwd(), "bin", ffmpeg_filename)
+    # 1. Cherche ffmpeg globalement (dans le PATH)
+    ffmpeg_path = shutil.which("ffmpeg")
 
-    # Vérifie si le binaire est exécutable
-    if not os.path.isfile(ffmpeg_path) or not os.access(ffmpeg_path, os.X_OK):
-        st.error(f"Erreur : Le binaire FFmpeg n'est pas exécutable ou absent à l'emplacement : {ffmpeg_path}")
+    # 2. Sinon, tente le binaire local dans bin/
+    if not ffmpeg_path:
+        if platform.system() == 'Windows':
+            ffmpeg_filename = "ffmpeg.exe"
+        else:
+            ffmpeg_filename = "ffmpeg"
+        local_ffmpeg = os.path.join(os.getcwd(), "bin", ffmpeg_filename)
+        if os.path.isfile(local_ffmpeg):
+            # Sur Windows, pas besoin de vérifier les droits d'exécution
+            if platform.system() == 'Windows' or os.access(local_ffmpeg, os.X_OK):
+                ffmpeg_path = local_ffmpeg
+    
+    # 3. Si aucun binaire trouvé, affiche une erreur
+    if not ffmpeg_path:
+        st.error("Erreur : FFmpeg n'est pas disponible sur ce système. Installez-le globalement ou placez le binaire dans le dossier bin/ de votre projet.")
         return None
 
     command = [
-        ffmpeg_path,  # Utilise le chemin local
+        ffmpeg_path,
         "-i", input_file_path,
         "-vn",
         "-acodec", "libmp3lame",
@@ -156,7 +165,7 @@ def convert_mp4_to_mp3(input_file_path, output_dir):
         subprocess.run(command, check=True, capture_output=True, text=True)
         return output_mp3_path
     except FileNotFoundError:
-        st.error("Erreur : FFmpeg n'a pas été trouvé. Veuillez vous assurer qu'il est installé dans le dossier bin de votre projet.")
+        st.error("Erreur : FFmpeg n'a pas été trouvé. Veuillez vous assurer qu'il est installé globalement ou dans le dossier bin de votre projet.")
         return None
     except subprocess.CalledProcessError as e:
         st.error(f"Erreur lors de la conversion : {e.stderr}")

@@ -1,0 +1,28 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+
+# Ignorer le dossier de l'environnement virtuel, qu'il soit nommé 'env' ou 'venv'
+env/
+venv/
+
+# Ignorer les fichiers de cache et les fichiers compilés par Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignorer les dossiers de distribution et les fichiers de construction
+dist/
+build/
+*.egg-info/
+
+# Fichiers et dossiers spécifiques à des outils courants
+.vscode/        # Visual Studio Code
+.idea/          # PyCharm / IntelliJ
+.DS_Store       # macOS
+
+# Fichiers de configuration sensibles
+.env
+*.json.secret
+config.ini
+
+# Dossiers générés par l'application
+uploads/

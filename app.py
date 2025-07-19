@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 import time
 import base64
+import platform
 
 # --- Configuration ---
 # Limite de taille de fichier à 500 Mo
@@ -130,8 +131,17 @@ def convert_mp4_to_mp3(input_file_path, output_dir):
     output_mp3_name = f"{base_name}.mp3"
     output_mp3_path = os.path.join(output_dir, output_mp3_name)
 
-    # Chemin explicite vers ffmpeg.exe dans le dossier bin
-    ffmpeg_path = os.path.join(os.getcwd(), "bin", "ffmpeg.exe")
+    # Choix du binaire selon l'OS
+    if platform.system() == 'Windows':
+        ffmpeg_filename = "ffmpeg.exe"
+    else:
+        ffmpeg_filename = "ffmpeg"
+    ffmpeg_path = os.path.join(os.getcwd(), "bin", ffmpeg_filename)
+
+    # Vérifie si le binaire est exécutable
+    if not os.path.isfile(ffmpeg_path) or not os.access(ffmpeg_path, os.X_OK):
+        st.error(f"Erreur : Le binaire FFmpeg n'est pas exécutable ou absent à l'emplacement : {ffmpeg_path}")
+        return None
 
     command = [
         ffmpeg_path,  # Utilise le chemin local

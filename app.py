@@ -83,8 +83,43 @@ st.markdown("""
         transform: scale(1.05);
         box-shadow: 0 8px 32px rgba(236, 72, 153, 0.3);
     }
+    .logo-img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1.5rem;
+        width: 100px;
+        height: 100px;
+        border-radius: 20px;
+        box-shadow: 0 2px 12px rgba(63, 211, 202, 0.15);
+        background: #fff;
+        object-fit: contain;
+    }
+    .footer-photo {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #3fd3ca;
+        box-shadow: 0 2px 8px rgba(63, 211, 202, 0.15);
+        margin-right: 1rem;
+        background: #fff;
+    }
+    .footer-author {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        color: #03333c;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
     </style>
     """, unsafe_allow_html=True)
+
+# --- Logo en haut de l'application ---
+st.image("logo.png", width=100, output_format="PNG", caption=None, use_container_width=False)
 
 # --- Fonctions  ---
 def convert_mp4_to_mp3(input_file_path, output_dir):
@@ -169,13 +204,11 @@ if uploaded_file is not None:
                     st.markdown(get_binary_file_downloader_html(mp3_path, os.path.basename(mp3_path)), unsafe_allow_html=True)
 
 # Section bas de page
-st.markdown("""
-    <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-        <div style="display: flex; justify-content: center; gap: 1rem; color: #9ca3af;">
-            <div style="display: flex; align-items: center;"><i class="fas fa-lock" style="color: #3fd3ca; margin-right: 0.25rem;"></i><span>Conversion sécurisée</span></div>
-            <div style="display: flex; align-items: center;"><i class="fas fa-bolt" style="color: #3fd3ca; margin-right: 0.25rem;"></i><span>Rapide</span></div>
-        </div>
-    </div>
-""", unsafe_allow_html=True)
+# Remplacer la balise <img> par st.image dans une disposition centrée
+footer_col1, footer_col2 = st.columns([1, 8])
+with footer_col1:
+    st.image("Shimatologue.jpg", width=60, output_format="JPEG", use_container_width=False)
+with footer_col2:
+    st.markdown('<span style="color:#03333c; font-weight:500; font-size:1.1rem; vertical-align:middle;">Gauthier Shimatu (le Shimatologue)</span>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)

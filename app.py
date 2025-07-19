@@ -171,17 +171,6 @@ def convert_mp4_to_mp3(input_file_path, output_dir):
         st.error(f"Erreur lors de la conversion : {e.stderr}")
         return None
 
-def get_binary_file_downloader_html(file_path, file_name):
-    """Génère un lien de téléchargement HTML pour un fichier."""
-    with open(file_path, 'rb') as f:
-        data = f.read()
-    b64 = base64.b64encode(data).decode()
-    return f"""
-        <a href="data:file/mp3;base64,{b64}" download="{file_name}">
-            <button class="stDownloadButton">Télécharger votre MP3</button>
-        </a>
-    """
-
 # --- Interface de l'application principale ---
 st.markdown('<div class="glass-box">', unsafe_allow_html=True)
 
@@ -223,7 +212,16 @@ if uploaded_file is not None:
 
                 if mp3_path:
                     st.success("Conversion terminée avec succès !")
-                    st.markdown(get_binary_file_downloader_html(mp3_path, os.path.basename(mp3_path)), unsafe_allow_html=True)
+                    
+                    # --- NOUVEAU CODE POUR LE TÉLÉCHARGEMENT ---
+                    with open(mp3_path, "rb") as f:
+                        st.download_button(
+                            label="Télécharger votre MP3",
+                            data=f,
+                            file_name=os.path.basename(mp3_path),
+                            mime="audio/mpeg"
+                        )
+                    # --------------------------------------------
 
 # Section bas de page
 # Remplacer la balise <img> par st.image dans une disposition centrée
